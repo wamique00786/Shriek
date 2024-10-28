@@ -51,21 +51,21 @@ pipeline {
                 script {
                     // Check if the container is running, stop and remove it if it exists
                     def containerExists = sh(
-                        script: "docker ps -q -f name=CONTAINER_NAME",
+                        script: "docker ps -q -f name=${CONTAINER_NAME}",
                         returnStatus: true
                     ) == 0
 
                     if (containerExists) {
                         echo 'Stopping and removing existing container...'
-                        sh "docker stop CONTAINER_NAME"
-                        sh "docker rm CONTAINER_NAME"
+                        sh "docker stop ${CONTAINER_NAME}"
+                        sh "docker rm ${CONTAINER_NAME}"
                     } else {
                         echo 'No existing container to stop.'
                     }
 
                     // Run the new container
                     echo 'Starting new container...'
-                    sh "docker run -d --rm --restart=always --name CONTAINER_NAME -p 80:8000 ${DOCKER_IMAGE}:latest"
+                    sh "docker run -d --rm --restart=always --name ${CONTAINER_NAME} -p 80:8000 ${DOCKER_IMAGE}:latest"
                 }
             }
         }
@@ -77,7 +77,7 @@ pipeline {
                 sh '''
                 echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USER} --password-stdin
                 docker pull ${DOCKER_IMAGE}:latest
-                docker run -d --rm --restart=always --name CONTAINER_NAME -p 80:8000 ${DOCKER_IMAGE}:latest
+                docker run -d --rm --restart=always --name ${CONTAINER_NAME} -p 80:8000 ${DOCKER_IMAGE}:latest
                 '''
             }
         }
