@@ -9,7 +9,7 @@ pipeline {
         DOCKER_PASSWORD = 'dockerpassword' // Replace with actual Docker Hub password
         TIMESTAMP = "${env.BUILD_ID}" // Unique timestamp for image tagging
         CONTAINER_NAME = 'shriek'
-         DOCKER_BUILDKIT = '1' // Enable BuildKit
+        DOCKER_BUILDKIT = '0' // Enable BuildKit
     }
 
     stages {
