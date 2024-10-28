@@ -1,63 +1,86 @@
-Pipeline{
-  agen{
-    any
-  }
-  stages{
-    stage('Clone Repo'){
-      step{
-        sh ' git clone -b main https://github.com/wamique00786/animalrescuer.git'
-      }
+pipeline {
+    agent any
+
+    environment {
+        // Environment variables
+        REPO_URL = 'https://github.com/wamique00786/Shriek.git'
+        DOCKER_IMAGE = 'wamique00786/Shriek'
+        DOCKER_USER = 'dockeruser' // Replace with actual Docker Hub username
+        DOCKER_PASSWORD = 'dockerpassword' // Replace with actual Docker Hub password
+        TIMESTAMP = "${env.BUILD_ID}" // Unique timestamp for image tagging
+        CONTAINER_NAME = 'shriek'
     }
-    stage('Build'){
-      step{
-        sh '''
-        docker build -t wamique00786/animalrescuer:${TimeStamp} .
-        docker tag wamique00786/animalrescuer:${TimeStamp} wamique00786/animalrescuer:latest
-        '''
-      }
-    }
-    stage('Pushing artifact'){
-      step{
-        sh '''
-        docker login -u dockeruser -p dockerpassword
-        docker push  wamique00786/animalrescuer:latest
-        docker push wamique00786/animalrescuer:${TimeStamp}
-        '''
-      }
-    }
-     stage('UAT Deployment'){
-      step{
-        sh '''
-        docker login -u dockeruser -p dockerpassword
-        docker pull  wamique00786/animalrescuer:latest
-        '''
-      }
-       script {
+
+    stages {
+        stage('Clone Repo') {
+            steps {
+                // Clone the repository
+                sh "git clone -b main ${REPO_URL}"
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                // Build Docker image with timestamp and latest tags
+                sh '''
+                docker build -t ${DOCKER_IMAGE}:${TIMESTAMP} .
+                docker tag ${DOCKER_IMAGE}:${TIMESTAMP} ${DOCKER_IMAGE}:latest
+                '''
+            }
+        }
+        
+        stage('Pushing artifact') {
+            steps {
+                // Login to Docker Hub and push images
+                sh '''
+                echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USER} --password-stdin
+                docker push ${DOCKER_IMAGE}:latest
+                docker push ${DOCKER_IMAGE}:${TIMESTAMP}
+                '''
+            }
+        }
+        
+        stage('UAT Deployment') {
+            steps {
+                // Pull the latest image from Docker Hub
+                sh '''
+                echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USER} --password-stdin
+                docker pull ${DOCKER_IMAGE}:latest
+                '''
+                
+                script {
                     // Check if the container is running, stop and remove it if it exists
                     def containerExists = sh(
-                        script: "docker ps -q -f name=animalrescuer",
+                        script: "docker ps -q -f name=CONTAINER_NAME",
                         returnStatus: true
                     ) == 0
 
                     if (containerExists) {
                         echo 'Stopping and removing existing container...'
-                        sh "docker stop animalrescuer"
-                        sh "docker rm animalrescuer"
+                        sh "docker stop CONTAINER_NAME"
+                        sh "docker rm CONTAINER_NAME"
                     } else {
                         echo 'No existing container to stop.'
                     }
 
                     // Run the new container
                     echo 'Starting new container...'
-                    sh "docker run -d --rm --restart=always --name animalrescuer -p 80:8000 wamique00786/animalrescuer:latest"
+                    sh "docker run -d --rm --restart=always --name CONTAINER_NAME -p 80:8000 ${DOCKER_IMAGE}:latest"
                 }
+            }
+        }
+        
+        /*
+        stage('Production Deployment') {
+            steps {
+                // Pull the latest image and deploy it
+                sh '''
+                echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USER} --password-stdin
+                docker pull ${DOCKER_IMAGE}:latest
+                docker run -d --rm --restart=always --name CONTAINER_NAME -p 80:8000 ${DOCKER_IMAGE}:latest
+                '''
+            }
+        }
+        */
     }
-     stage('Production Deployment'){
-      step{
-        sh '''
-        docker login -u dockeruser -p dockerpassword
-        docker pull  wamique00786/animalrescuer:latest
-        docker run -d --rm --restart=always --name animalrescuer -p80:8000 wamique00786/animalrescuer:latest
-        '''
-      }
-    }
+}
