@@ -5,7 +5,7 @@ pipeline {
         // Environment variables
         REPO_URL = 'https://github.com/wamique00786/Shriek.git'
         DOCKER_IMAGE = 'wamique00786/shriek'
-        DOCKER_USER = 'dockeruser' // Replace with actual Docker Hub username
+        DOCKER_USER = 'wamique00786' // Replace with actual Docker Hub username
         DOCKER_PASSWORD = 'dockerpassword' // Replace with actual Docker Hub password
         TIMESTAMP = "${env.BUILD_ID}" // Unique timestamp for image tagging
         CONTAINER_NAME = 'shriek'
