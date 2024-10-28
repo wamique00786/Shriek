@@ -12,12 +12,12 @@ pipeline {
     }
 
     stages {
-        stage('Clone Repo') {
-            steps {
-                // Clone the repository
-                sh "git clone -b main ${REPO_URL}"
-            }
-        }
+        // stage('Clone Repo') {
+        //     steps {
+        //         // Clone the repository
+        //         sh "git clone -b main ${REPO_URL}"
+        //     }
+        // }
         
         stage('Build') {
             steps {
