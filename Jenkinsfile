@@ -24,7 +24,7 @@ pipeline {
             steps {
                 // Build Docker image with timestamp and latest tags
                 sh '''
-                docker build -t ${DOCKER_IMAGE}:${TIMESTAMP} .
+                DOCKER_BUILDKIT=0  docker build -t ${DOCKER_IMAGE}:${TIMESTAMP} .
                 docker tag ${DOCKER_IMAGE}:${TIMESTAMP} ${DOCKER_IMAGE}:latest
                 '''
             }
