@@ -34,7 +34,7 @@ pipeline {
             steps {
                 // Login to Docker Hub and push images
                 sh '''
-                echo ${DOCKER_PASSWORD} | docker login https://hub.docker.com/ -u ${DOCKER_USER} --password-stdin
+                echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USER} --password-stdin
                 docker push ${DOCKER_IMAGE}:latest
                 docker push ${DOCKER_IMAGE}:${TIMESTAMP}
                 '''
