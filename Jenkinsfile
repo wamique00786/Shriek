@@ -22,6 +22,7 @@ pipeline {
         
         stage('Build') {
             steps {
+                
                 // Build Docker image with timestamp and latest tags
                 sh '''
                 DOCKER_BUILDKIT=0  docker build -t ${DOCKER_IMAGE}:${TIMESTAMP} .
@@ -32,12 +33,16 @@ pipeline {
         
         stage('Pushing artifact') {
             steps {
+                script{
+                    withCredentials([string(credentialsId: 'dockerhub', variable: 'DOCKER_PASSWORD')]) {
                 // Login to Docker Hub and push images
                 sh '''
                 echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USER} --password-stdin
                 docker push ${DOCKER_IMAGE}:latest
                 docker push ${DOCKER_IMAGE}:${TIMESTAMP}
                 '''
+                    }
+                }
             }
         }
         
