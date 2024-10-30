@@ -39,7 +39,7 @@ pipeline {
                        // #echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USER} --password-stdin
                // echo "${DOCKER_PASSWORD}" | docker login -u ${DOCKER_USER} --password-stdin
                 sh '''
-                echo "Pass@00786" | docker login -u ${DOCKER_USER} --password-stdin
+                docker login -u ${DOCKER_USER} -p ${DOCKER_PASSWORD}
                 docker push ${DOCKER_IMAGE}:latest
                 docker push ${DOCKER_IMAGE}:${TIMESTAMP}
                 '''
