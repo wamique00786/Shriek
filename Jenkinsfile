@@ -5,7 +5,7 @@ pipeline {
         // Environment variables
         REPO_URL = 'https://github.com/wamique00786/Shriek.git'
         DOCKER_IMAGE = 'wamique00786/shriek'
-        DOCKER_USER = 'wamique00786' // Replace with actual Docker Hub username
+      //  DOCKER_USER = 'wamique00786' // Replace with actual Docker Hub username
        // DOCKER_PASSWORD = credentials('dockerhub') // Replace with actual Docker Hub password
         CONTAINER_NAME = 'shriek'
         DOCKER_BUILDKIT = '0' // Enable BuildKit
@@ -37,6 +37,7 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD')]) {
                
                 sh '''
+                echo "${DOCKER_USER}"
                 echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USER}" --password-stdin
                 docker push ${DOCKER_IMAGE}:latest
                 docker push ${DOCKER_IMAGE}:${TIMESTAMP}
