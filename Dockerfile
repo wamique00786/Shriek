@@ -14,7 +14,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the Django project code
 COPY . /app/
-
+RUN cd shriek
 # Expose port 8000 to the host
 EXPOSE 8000
 
