@@ -35,11 +35,9 @@ pipeline {
             steps {
                 script{
                     withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD')]) {
-                // Login to Docker Hub and push images
-                       // #echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USER} --password-stdin
-               // echo "${DOCKER_PASSWORD}" | docker login -u ${DOCKER_USER} --password-stdin
+               
                 sh '''
-                docker login -u ${DOCKER_USER} -p ${DOCKER_PASSWORD}
+                echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USER}" --password-stdin
                 docker push ${DOCKER_IMAGE}:latest
                 docker push ${DOCKER_IMAGE}:${TIMESTAMP}
                 '''
