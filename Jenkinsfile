@@ -7,9 +7,9 @@ pipeline {
         DOCKER_IMAGE = 'wamique00786/shriek'
         DOCKER_USER = 'wamique00786' // Replace with actual Docker Hub username
        // DOCKER_PASSWORD = credentials('dockerhub') // Replace with actual Docker Hub password
-        TIMESTAMP = "${env.BUILD_ID}" // Unique timestamp for image tagging
         CONTAINER_NAME = 'shriek'
         DOCKER_BUILDKIT = '0' // Enable BuildKit
+        TIMESTAMP = new Date().format("yyyyMMddHHmmss")
     }
 
     stages {
