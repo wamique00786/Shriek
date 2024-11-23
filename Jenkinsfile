@@ -4,7 +4,7 @@ pipeline {
     environment {
         // Environment variables
         REPO_URL = 'https://github.com/wamique00786/Shriek.git'
-        DOCKER_IMAGE = 'wamique00786/shriek'
+        DOCKER_IMAGE = 'wamique00786/shriek-f'
       //  DOCKER_USER = 'wamique00786' // Replace with actual Docker Hub username
        // DOCKER_PASSWORD = credentials('dockerhub') // Replace with actual Docker Hub password
         CONTAINER_NAME = 'shriek'
@@ -13,12 +13,6 @@ pipeline {
     }
 
     stages {
-        // stage('Clone Repo') {
-        //     steps {
-        //         // Clone the repository
-        //         sh "git clone -b main ${REPO_URL}"
-        //     }
-        // }
         
         stage('Build') {
             steps {
